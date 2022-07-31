@@ -8,6 +8,12 @@
 - Run `cargo run`
 - Service is running at: http://127.0.0.1:8080/echo
 
+## Tests
+
+```shell
+cargo test
+```
+
 ## REST calls
 
 ### POST /echo
