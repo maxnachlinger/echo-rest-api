@@ -1,5 +1,4 @@
 use serde::{Deserialize, Serialize};
-use config::{Config, ConfigError};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct AppOptions {
@@ -12,12 +11,21 @@ pub struct Settings {
     pub app: AppOptions,
 }
 
-pub fn get_settings() -> Result<Settings, ConfigError> {
-    //let env = env::var("ENVIRONMENT").unwrap_or_else(|_| "stage".into());
+const DEFAULT_HOST: &str = "127.0.0.1";
+const DEFAULT_PORT: u16 = 8080;
 
-    Config::builder()
-        .add_source(config::File::with_name("config/base.toml"))
-        //.add_source(File::with_name(&format!("config/{}/config.toml", env)).required(false))
-        .build()?
-        .try_deserialize()
+pub fn get_settings() -> Settings {
+    let host = option_env!("HOST")
+        .unwrap_or(DEFAULT_HOST).into();
+    let port = option_env!("PORT")
+        .unwrap_or(DEFAULT_PORT.to_string().as_ref())
+        .parse::<u16>()
+        .unwrap_or(DEFAULT_PORT);
+
+    Settings {
+        app: AppOptions {
+            port,
+            host,
+        }
+    }
 }

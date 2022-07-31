@@ -58,7 +58,7 @@ async fn openapi() -> impl Responder {
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
-    let settings = get_settings().expect("Could not read settings");
+    let settings = get_settings();
     let AppOptions { host, port } = settings.app;
 
     env_logger::init_from_env(env_logger::Env::new().default_filter_or("info"));
