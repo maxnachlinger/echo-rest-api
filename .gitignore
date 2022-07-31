@@ -1,3 +1,5 @@
 /target
 .vscode
 .idea
+*.profraw
+.DS_Store
