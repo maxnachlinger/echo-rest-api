@@ -1,10 +1,10 @@
 mod settings;
 
+use crate::settings::{get_settings, AppOptions};
 use actix_files::NamedFile;
 use actix_web::{get, middleware, post, web, App, HttpResponse, HttpServer, Responder};
 use serde::{Deserialize, Serialize};
 use validator::Validate;
-use crate::settings::{AppOptions, get_settings};
 
 const DEFAULT_MESSAGE: &str = "This is a default message";
 
