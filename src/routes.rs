@@ -1,5 +1,5 @@
 use actix_files::NamedFile;
-use actix_web::{get, post, web, HttpResponse, Responder};
+use actix_web::{get, post, web, HttpResponse};
 use serde::{Deserialize, Serialize};
 use validator::Validate;
 
@@ -49,7 +49,7 @@ pub async fn post_echo(input: web::Json<MessageInput>) -> HttpResponse {
 }
 
 #[get("/openapi")]
-pub async fn openapi() -> impl Responder {
+pub async fn openapi() -> std::io::Result<NamedFile> {
     NamedFile::open_async("data/openapi.yaml").await
 }
 

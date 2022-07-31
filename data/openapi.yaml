@@ -3,36 +3,39 @@ info:
   title: Echo REST API
   description: Simple Echo REST API
   version: 1.0.0
+servers:
+  - url: http://127.0.0.1:8080
 paths:
   /echo:
     get:
       operationId: getEcho
       parameters:
         - in: query
+          required: false
           name: message
           schema:
             type: string
       responses:
-        200:
+        '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Message"
+                $ref: '#/components/schemas/Message'
     post:
       operationId: postEcho
       requestBody:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Message"
+              $ref: '#/components/schemas/Message'
       responses:
-        200:
+        '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Message"
+                $ref: '#/components/schemas/Message'
 components:
   schemas:
     Message:
