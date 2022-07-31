@@ -1,7 +1,10 @@
+mod settings;
+
 use actix_files::NamedFile;
 use actix_web::{get, middleware, post, web, App, HttpResponse, HttpServer, Responder};
 use serde::{Deserialize, Serialize};
 use validator::Validate;
+use crate::settings::{AppOptions, get_settings};
 
 const DEFAULT_MESSAGE: &str = "This is a default message";
 
@@ -55,15 +58,12 @@ async fn openapi() -> impl Responder {
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
+    let settings = get_settings().expect("Could not read settings");
+    let AppOptions { host, port } = settings.app;
+
     env_logger::init_from_env(env_logger::Env::new().default_filter_or("info"));
 
-    let address = "127.0.0.1";
-    let port = option_env!("PORT")
-        .unwrap_or("8080")
-        .parse::<u16>()
-        .unwrap_or(8080);
-
-    log::info!("Listening at {}:{}", address, port);
+    log::info!("Listening at {}:{}", &host, &port);
 
     HttpServer::new(|| {
         App::new()
@@ -72,7 +72,7 @@ async fn main() -> std::io::Result<()> {
             .service(post_echo)
             .service(openapi)
     })
-    .bind((address, port))?
+    .bind((host, port))?
     .run()
     .await
 }
