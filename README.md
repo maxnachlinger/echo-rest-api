@@ -14,7 +14,7 @@ via environment variables:
 - `HOST` (default `"127.0.0.1"`)
 - `PORT` (default `8080`)
 - `RUST_LOG` - (default "info" via `env_logger`)
-- `SOCKET_ADDRESS` - (default `"[::1]:10000"`)
+- `SOCKET_ADDRESS` - (default `"127.0.0.1:10000"`)
 
 ## Tests
 
