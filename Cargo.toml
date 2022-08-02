@@ -7,7 +7,14 @@ edition = "2021"
 actix-web = "4.1"
 actix-files = "0.6"
 env_logger = "0.9"
+futures = "0.3.21"
 log = "0.4"
+prost = "0.11"
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
+tokio = { version = "1.20", features = ["full"] }
+tonic = "0.8"
 validator = { version = "0.16", features = ["derive"] }
+
+[build-dependencies]
+tonic-build = "0.8"
