@@ -14,7 +14,7 @@ pub struct Settings {
 
 const DEFAULT_HOST: &str = "127.0.0.1";
 const DEFAULT_PORT: u16 = 8080;
-const DEFAULT_SOCKET_ADDRESS: &str = "[::1]:10000";
+const DEFAULT_SOCKET_ADDRESS: &str = "127.0.0.1:8081";
 
 pub fn get_settings() -> Settings {
     let host = option_env!("HOST").unwrap_or(DEFAULT_HOST).into();
