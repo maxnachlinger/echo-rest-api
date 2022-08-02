@@ -1,6 +1,6 @@
 # echo-rest-api
 
-> A simple echo REST API
+> A simple echo REST and rRPC API
 
 ## How to run
 
@@ -13,7 +13,8 @@
 via environment variables:
 - `HOST` (default `"127.0.0.1"`)
 - `PORT` (default `8080`)
-- `RUST_LOG` - default "info" via `env_logger`
+- `RUST_LOG` - (default "info" via `env_logger`)
+- `SOCKET_ADDRESS` - (default `"[::1]:10000"`)
 
 ## Tests
 
@@ -44,6 +45,18 @@ curl -v http://127.0.0.1:8080/echo
 curl -v \
 "http://127.0.0.1:8080/echo?message=test+with+spaces"
 ```
+
+## gRPC calls
+
+(via [`grpcurl`](https://github.com/fullstorydev/grpcurl))
+
+```shell
+grpcurl -plaintext -import-path ./proto -proto echo.proto \
+-d '{"message": "test message"}' \
+[::]:10000 echo.Echo/EchoMessage
+```
+
+[Bloom RPC](https://github.com/uw-labs/bloomrpc) is also an awesome client for gRPC :)
 
 ## OpenAPI file
 
