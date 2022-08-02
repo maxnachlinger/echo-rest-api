@@ -13,15 +13,15 @@ pub struct Settings {
 }
 
 const DEFAULT_HOST: &str = "127.0.0.1";
-const DEFAULT_PORT: u16 = 8080;
+const DEFAULT_PORT: &str = "8080";
 const DEFAULT_SOCKET_ADDRESS: &str = "127.0.0.1:8081";
 
 pub fn get_settings() -> Settings {
     let host = option_env!("HOST").unwrap_or(DEFAULT_HOST).into();
     let port = option_env!("PORT")
-        .unwrap_or(DEFAULT_PORT.to_string().as_ref())
+        .unwrap_or(DEFAULT_PORT)
         .parse::<u16>()
-        .unwrap_or(DEFAULT_PORT);
+        .unwrap();
     let socket_address = option_env!("SOCKET_ADDRESS")
         .unwrap_or(DEFAULT_SOCKET_ADDRESS)
         .into();
