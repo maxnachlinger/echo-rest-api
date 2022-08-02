@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package echo;
+package echo.v1;
 
 service Echo {
   rpc EchoMessage(MessageToEcho) returns (MessageToEcho) {}
