@@ -3,8 +3,6 @@ use actix_web::{get, post, web, HttpResponse};
 use serde::{Deserialize, Serialize};
 use validator::Validate;
 
-const DEFAULT_MESSAGE: &str = "This is a default message";
-
 #[derive(Serialize, Deserialize)]
 pub struct MessageInput {
     message: Option<String>,
@@ -15,6 +13,8 @@ pub struct Message {
     #[validate(length(min = 1, max = 200))]
     message: String,
 }
+
+const DEFAULT_MESSAGE: &str = "This is a default message";
 
 fn to_message(input: &MessageInput) -> Message {
     Message {
@@ -28,7 +28,7 @@ fn to_message(input: &MessageInput) -> Message {
 }
 
 fn validate_message_input(input: &MessageInput) -> HttpResponse {
-    let message = to_message(&input);
+    let message = to_message(input);
 
     message.validate().map_or(
         HttpResponse::BadRequest().json(Message {
@@ -48,11 +48,16 @@ pub async fn post_echo(input: web::Json<MessageInput>) -> HttpResponse {
     validate_message_input(&input.into_inner())
 }
 
-#[get("/openapi")]
-pub async fn openapi() -> std::io::Result<NamedFile> {
-    Ok(NamedFile::open_async("data/openapi.yaml")
-        .await?
-        .use_etag(true))
+const HEALTHCHECK_OK: &str = "OK";
+
+#[get("/healthcheck")]
+async fn get_healthcheck() -> &'static str {
+    HEALTHCHECK_OK
+}
+
+#[get("/swagger")]
+pub async fn swagger() -> std::io::Result<NamedFile> {
+    NamedFile::open_async("data/swagger.yaml").await
 }
 
 #[cfg(test)]
@@ -128,7 +133,7 @@ mod tests {
         let app = App::new().service(get_echo);
         let app = test::init_service(app).await;
 
-        let message: String = "test".repeat(100).into();
+        let message: String = "test".repeat(100);
         let req = test::TestRequest::get()
             .uri(&format!("/echo?message={}", &message))
             .to_request();
@@ -198,7 +203,7 @@ mod tests {
         let app = test::init_service(app).await;
 
         let payload = MessageInput {
-            message: Some("test message".repeat(100).into()),
+            message: Some("test message".repeat(100)),
         };
 
         let req = test::TestRequest::post()
@@ -215,11 +220,25 @@ mod tests {
     }
 
     #[actix_web::test]
-    async fn test_gets_openapi() -> Result<(), Error> {
-        let app = App::new().service(openapi);
+    async fn test_gets_swagger() -> Result<(), Error> {
+        let app = App::new().service(swagger);
         let app = test::init_service(app).await;
 
-        let req = test::TestRequest::get().uri("/openapi").to_request();
+        let req = test::TestRequest::get().uri("/swagger").to_request();
+
+        let resp = app.call(req).await?;
+
+        assert_eq!(resp.status(), http::StatusCode::OK);
+
+        Ok(())
+    }
+
+    #[actix_web::test]
+    async fn test_gets_healthcheck() -> Result<(), Error> {
+        let app = App::new().service(get_healthcheck);
+        let app = test::init_service(app).await;
+
+        let req = test::TestRequest::get().uri("/healthcheck").to_request();
 
         let resp = app.call(req).await?;
 
