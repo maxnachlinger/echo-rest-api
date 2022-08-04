@@ -1,6 +1,6 @@
 # echo-rest-api
 
-> A simple echo REST and rRPC API
+> A simple echo REST and gRPC API
 
 ## How to run
 
